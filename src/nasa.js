@@ -14,7 +14,7 @@ export function buildUrl(location) {
 export function parseClimatology(payload, location) {
   const props = payload?.properties?.parameter || payload?.parameter;
   if (!props?.T2M || !props?.PRECTOTCORR) throw new Error('NASA response missing climate parameters');
-  return { source: 'Live · NASA POWER', location, parameters: { T2M: props.T2M, PRECTOTCORR: props.PRECTOTCORR } };
+  return { source: 'Live · NASA POWER', location, fetchedAt: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }), parameters: { T2M: props.T2M, PRECTOTCORR: props.PRECTOTCORR } };
 }
 
 export async function fetchClimatology(location = LOCATIONS.agra, options = {}) {

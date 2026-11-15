@@ -5,5 +5,6 @@ export const t = {
   offline: 'लाइव डेटा नहीं मिला; नमूना डेटा दिखाया जा रहा है।', methods: 'तरीका और सीमाएँ',
   listen: '🔊 सुनिए', back: 'वापस', saveWater: 'पानी बचाएँ', improveSoil: 'मिट्टी सुधारें',
   income: 'अतिरिक्त आय', annualTemp: 'सालभर का तापमान', monsoon: 'जून–सितंबर बारिश',
-  why: 'क्यों?', evidence: 'सबूत', gaps: 'हमें यह नहीं पता', caution: 'सावधानी'
+  why: 'क्यों?', evidence: 'सबूत', gaps: 'हमें यह नहीं पता', caution: 'सावधानी',
+  advisor: 'सलाह / Advisor', methods: 'तरीका / Methods', data: 'डेटा / Data sources', demo: 'डेमो चलाएँ'
 };
