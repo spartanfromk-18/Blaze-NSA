@@ -1,5 +1,5 @@
 import { access, readFile } from 'node:fs/promises';
-const required=['index.html','styles.css','src/main.js','src/nasa.js','src/climate.js','src/rotations.js','src/engine.js','src/voice.js','src/i18n.js','src/components.js','data/fallback-cache.json','test/engine.test.mjs','test/nasa.test.mjs'];
+const required=['index.html','styles.css','src/main.js','src/nasa.js','src/climate.js','src/rotations.js','src/engine.js','src/voice.js','src/i18n.js','src/components.js','src/chart.js','src/dataPanel.js','src/hero.js','data/fallback-cache.json','test/engine.test.mjs','test/nasa.test.mjs','test/chart.test.mjs'];
 for(const file of required) await access(file);
 const cache = JSON.parse(await readFile('data/fallback-cache.json','utf8'));
 if (!cache.properties?.parameter?.T2M || !cache.properties?.parameter?.PRECTOTCORR) throw new Error('fallback must be a captured NASA POWER response');
@@ -8,4 +8,10 @@ for (const id of ['current','maize-moong','bajra-mustard','paddy-dhaincha']) if 
 for (const phrase of ['evidence','gaps','risks','1.5']) if (!rotations.includes(phrase)) throw new Error(`missing scoring gate ${phrase}`);
 const engine = await readFile('src/engine.js','utf8');
 for (const phrase of ['annualRain','monthlyRain','heatStress']) if (!engine.includes(phrase)) throw new Error(`missing climate gate ${phrase}`);
-console.log(`Blaze verify: ${required.length} files, captured POWER cache, rotation evidence, and climate gates valid.`);
+const main = await readFile('src/main.js','utf8');
+const dataPanel = await readFile('src/dataPanel.js','utf8');
+for (const phrase of ['aria-pressed','comparisonTable','#methods']) if (!main.includes(phrase)) throw new Error(`missing frontend gate ${phrase}`);
+if (!dataPanel.includes('download-csv')) throw new Error('missing frontend gate download-csv');
+const styles = await readFile('styles.css','utf8');
+for (const phrase of ['overflow:hidden','@media(max-width:700px)','focus-visible']) if (!styles.includes(phrase)) throw new Error(`missing responsive/accessibility gate ${phrase}`);
+console.log(`Blaze verify: ${required.length} files, POWER cache, transparent scoring, responsive chart, provenance, CSV, and accessibility controls valid.`);
