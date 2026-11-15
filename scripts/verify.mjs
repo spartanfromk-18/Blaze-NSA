@@ -1,0 +1,11 @@
+import { access, readFile } from 'node:fs/promises';
+const required=['index.html','styles.css','src/main.js','src/nasa.js','src/climate.js','src/rotations.js','src/engine.js','src/voice.js','src/i18n.js','src/components.js','data/fallback-cache.json','test/engine.test.mjs','test/nasa.test.mjs'];
+for(const file of required) await access(file);
+const cache = JSON.parse(await readFile('data/fallback-cache.json','utf8'));
+if (!cache.properties?.parameter?.T2M || !cache.properties?.parameter?.PRECTOTCORR) throw new Error('fallback must be a captured NASA POWER response');
+const rotations = await readFile('src/rotations.js','utf8');
+for (const id of ['current','maize-moong','bajra-mustard','paddy-dhaincha']) if (!rotations.includes(id)) throw new Error(`missing rotation ${id}`);
+for (const phrase of ['evidence','gaps','risks','1.5']) if (!rotations.includes(phrase)) throw new Error(`missing scoring gate ${phrase}`);
+const engine = await readFile('src/engine.js','utf8');
+for (const phrase of ['annualRain','monthlyRain','heatStress']) if (!engine.includes(phrase)) throw new Error(`missing climate gate ${phrase}`);
+console.log(`Blaze verify: ${required.length} files, captured POWER cache, rotation evidence, and climate gates valid.`);

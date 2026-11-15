@@ -1,0 +1,7 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { buildUrl, parseClimatology, fetchClimatology, loadClimate, LOCATIONS } from '../src/nasa.js';
+test('builds NASA POWER climatology URL',()=>{const u=new URL(buildUrl(LOCATIONS.agra));assert.equal(u.hostname,'power.larc.nasa.gov');assert.equal(u.searchParams.get('community'),'AG');assert.match(u.searchParams.get('parameters'),/T2M/)});
+test('parses GeoJSON POWER response',()=>{const x=parseClimatology({properties:{parameter:{T2M:{ANN:26.5},PRECTOTCORR:{JUL:5.9}}}},LOCATIONS.agra);assert.equal(x.source,'Live · NASA POWER');assert.equal(x.parameters.T2M.ANN,26.5)});
+test('retries once after transient failure',async()=>{let calls=0;const fetcher=async()=>{calls++;if(calls===1)throw new Error('network');return {ok:true,json:async()=>({properties:{parameter:{T2M:{ANN:26},PRECTOTCORR:{ANN:2}}}})}};const x=await fetchClimatology(LOCATIONS.agra,{fetch:fetcher,retries:1,timeout:20});assert.equal(calls,2);assert.equal(x.parameters.T2M.ANN,26)});
+test('falls back to a captured POWER-shaped response and marks Sample',async()=>{let calls=0;const fetcher=async(url)=>{calls++;if(url.startsWith('http'))throw new Error('offline');return {json:async()=>({properties:{parameter:{T2M:{ANN:26.54},PRECTOTCORR:{ANN:2.1}}}})}};const x=await loadClimate(LOCATIONS.agra,{fetch:fetcher,retries:0,fallbackUrl:'cache.json'});assert.equal(x.source,'Sample');assert.equal(x.parameters.T2M.ANN,26.54);assert.equal(calls,2)});

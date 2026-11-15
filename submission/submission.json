@@ -1,0 +1,9 @@
+{
+  "name": "Blaze Field Advisor",
+  "tagline": "आपकी मिट्टी, आसमान का डेटा, सही फैसला",
+  "category": "Field Shift: Adapting Farms with NASA Data",
+  "nasaDataset": "NASA POWER climatology",
+  "liveDemo": "Static SPA: serve repository root",
+  "honesty": "Live NASA values are badged; fallback values are Sample",
+  "notes": "No build, backend, secrets, cookies, analytics, or dependencies."
+}
