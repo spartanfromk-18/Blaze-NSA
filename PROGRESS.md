@@ -17,6 +17,13 @@ Vercel preparation evidence (2026-11-15):
 - Added `vercel.json`, `.vercelignore`, discovery files, canonical production metadata, and `scripts/verify-prod.mjs`.
 - The current production URL is still serving the pre-Vercel deployment; live V1/V2 verification is pending the Vercel GitHub integration deployment after merge.
 
+Post-merge Vercel evidence (2026-11-15):
+
+- Production `https://blazecrops.vercel.app/` passes V1–V7 and V10 with the live verifier.
+- Production security headers are present, including CSP `frame-ancestors 'none'`; excluded repository paths return 404.
+- Preview is protected by Vercel SSO and reports `x-robots-tag: noindex`.
+- Browser flow, blocked-NASA/slow-3G, and Lighthouse scores are UNVERIFIED because Chrome/Playwright are unavailable.
+
 Hardening evidence (2026-11-15):
 
 - `node --test` passes 11/11; `node scripts/verify.mjs` passes.

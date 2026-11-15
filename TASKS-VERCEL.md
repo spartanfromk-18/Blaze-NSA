@@ -18,13 +18,13 @@ Phase 0 evidence (2026-11-15 IST):
 - [x] T1.3 Make `https://blazecrops.vercel.app/` canonical everywhere; retain GitHub Pages as labelled backup — only the labelled README backup contains `github.io`.
 - [x] T1.4 Add `robots.txt`, `sitemap.xml`, and `.well-known/security.txt`.
 - [x] T1.5 Verify static Vercel configuration has no build/install/env requirements — no package manifest or Vercel env configuration exists.
-- [ ] T1.6 Add `scripts/verify-prod.mjs` for live Vercel gates V1–V10 — script added; live verification awaits deployment of this branch.
+- [ ] T1.6 Add `scripts/verify-prod.mjs` for live Vercel gates V1–V10 — V1–V7 and V10 pass on production; V8/V9 remain unverified without Chrome/Playwright.
 
 ## Tier 2 — should
 
-- [ ] T2.1 Run Lighthouse mobile against production and record real scores.
-- [ ] T2.2 Verify production security headers and document external grading if reachable.
-- [ ] T2.3 Verify preview deployment no-index hygiene.
+- [ ] T2.1 Run Lighthouse mobile against production and record real scores — UNVERIFIED: Lighthouse reports no Chrome executable.
+- [x] T2.2 Verify production security headers and document external grading if reachable — `curl` and V2 pass; external grader not run.
+- [x] T2.3 Verify preview deployment no-index hygiene — preview returned `x-robots-tag: noindex` but required Vercel SSO.
 - [x] T2.4 Add CSP parity coverage to CI.
 - [x] T2.5 Update deployment, rollback, security, privacy, and threat-model docs.
 
@@ -39,4 +39,8 @@ Phase 0 evidence (2026-11-15 IST):
 Required after every change: `node --test && node scripts/verify.mjs`.
 After deployment: `node scripts/verify-prod.mjs https://blazecrops.vercel.app/`.
 
-Current production evidence: the URL responds 200 but still serves the pre-Vercel canonical URL and does not yet have the configured Vercel security headers. V1/V2 therefore remain pending until this branch is merged and redeployed.
+Post-merge production evidence (2026-11-15 10:46 IST):
+
+- `node scripts/verify-prod.mjs https://blazecrops.vercel.app/`: V1–V7 and V10 PASS.
+- V2 includes `nosniff`, `DENY`, `no-referrer`, Permissions-Policy, COOP, CORP, and CSP with `frame-ancestors 'none'`.
+- V8/V9 are UNVERIFIED because Chromium/Playwright could not run; Lighthouse is also UNVERIFIED because Chrome is unavailable.
