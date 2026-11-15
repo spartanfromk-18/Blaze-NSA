@@ -8,9 +8,9 @@ The app has no sensitive assets. The trust boundary is the browser ↔ NASA POWE
 
 - **XSS or malicious upstream data:** escaped rendered values, DOM APIs for score widths, strict payload validation, and meta CSP.
 - **CDN or supply-chain compromise:** no CDN scripts, no runtime dependencies, and major-version-pinned GitHub Actions.
-- **Clickjacking:** documented residual risk because Pages cannot set `frame-ancestors` or `X-Frame-Options`.
+- **Clickjacking:** Vercel sends `frame-ancestors 'none'` and `X-Frame-Options: DENY`; the GitHub Pages backup retains only the meta-CSP limitation.
 - **Availability:** timeout/retry plus validated local fallback cache.
 
 ## Residual risk
 
-GitHub Pages cannot enforce response headers such as HSTS or Permissions-Policy. A compromised hosting account or browser remains outside this static app's controls.
+Vercel enforces the configured response headers, but GitHub Pages cannot enforce response headers such as HSTS or Permissions-Policy. A compromised hosting account or browser remains outside this static app's controls.

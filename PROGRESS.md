@@ -11,6 +11,12 @@ Verification evidence (2026-11-15): NASA POWER climatology request returned HTTP
 
 The app intentionally has no backend, keys, cookies, analytics, or build step.
 
+Vercel preparation evidence (2026-11-15):
+
+- `node --test`: 12 passing, including CSP parity; `node scripts/verify.mjs` and `node scripts/verify-publish.mjs` pass.
+- Added `vercel.json`, `.vercelignore`, discovery files, canonical production metadata, and `scripts/verify-prod.mjs`.
+- The current production URL is still serving the pre-Vercel deployment; live V1/V2 verification is pending the Vercel GitHub integration deployment after merge.
+
 Hardening evidence (2026-11-15):
 
 - `node --test` passes 11/11; `node scripts/verify.mjs` passes.

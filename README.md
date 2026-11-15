@@ -2,7 +2,8 @@
 
 [![CI](https://github.com/spartanfromk-18/Blaze-NSA/actions/workflows/ci.yml/badge.svg)](https://github.com/spartanfromk-18/Blaze-NSA/actions/workflows/ci.yml)
 
-**Live demo:** https://spartanfromk-18.github.io/Blaze-NSA/
+**Live demo:** https://blazecrops.vercel.app/<br>
+**Backup mirror:** https://spartanfromk-18.github.io/Blaze-NSA/
 
 ## 30-second pitch
 
@@ -28,6 +29,14 @@ node scripts/verify.mjs
 ```
 
 Scoring is a transparent heuristic, not machine learning or agronomic advice. NASA POWER climatology values are long-term averages; local soil, irrigation, pests, prices and farmer goals still require an expert.
+
+## Deployment
+
+The primary deployment is Vercel at https://blazecrops.vercel.app/. GitHub Pages remains a labelled backup mirror. Vercel uses [vercel.json](./vercel.json) for HTTP security headers, cache rules, and the same CSP policy kept in `index.html` for the backup mirror.
+
+To deploy, import the repository in Vercel with **Framework: Other**, leaving build command, output directory, install command, and environment variables empty. Production should track `main`; Vercel's GitHub integration performs the deployment without tokens in this repository.
+
+For rollback, use Vercel **Deployments → previous deployment → Promote to Production** first, then revert the merge if necessary. Keep the GitHub Pages mirror live until the production URL has passed `node scripts/verify-prod.mjs https://blazecrops.vercel.app/`.
 
 ## Architecture and data flow
 

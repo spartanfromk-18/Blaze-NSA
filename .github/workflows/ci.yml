@@ -17,3 +17,4 @@ jobs:
           node-version: 20
       - run: node --test
       - run: node scripts/verify.mjs
+      - run: node scripts/verify-publish.mjs
