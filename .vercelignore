@@ -1,0 +1,12 @@
+Docx/
+test/
+scripts/
+submission/
+docs/
+TASKS*.md
+PROGRESS.md
+DECISIONS.md
+.github/
+*.log
+*.md
+LICENSE

@@ -1,6 +1,6 @@
 # Submission checklist
 
-- [ ] Public link loads on a phone-width browser.
+- [ ] Public link loads on a phone-width browser: https://blazecrops.vercel.app/
 - [x] NASA POWER is named and used live.
 - [x] Demo path fits a 30-second video or 7-slide deck.
 - [x] Slides and video subtitles are in English.

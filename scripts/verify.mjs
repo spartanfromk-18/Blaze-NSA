@@ -2,6 +2,7 @@ import { access, readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 const required=['index.html','styles.css','src/main.js','src/nasa.js','src/climate.js','src/rotations.js','src/engine.js','src/voice.js','src/i18n.js','src/components.js','src/chart.js','src/dataPanel.js','src/hero.js','data/fallback-cache.json','test/engine.test.mjs','test/nasa.test.mjs','test/chart.test.mjs'];
 for(const file of required) await access(file);
+for (const file of ['vercel.json', '.vercelignore', 'robots.txt', 'sitemap.xml', '.well-known/security.txt', 'test/csp-parity.test.mjs', 'scripts/verify-publish.mjs', 'scripts/verify-prod.mjs']) await access(file);
 const ci = await readFile('.github/workflows/ci.yml', 'utf8');
 const pages = await readFile('.github/workflows/pages.yml', 'utf8');
 for (const phrase of ['node --test', 'node scripts/verify.mjs', 'pull_request']) if (!ci.includes(phrase)) throw new Error(`missing CI gate: ${phrase}`);

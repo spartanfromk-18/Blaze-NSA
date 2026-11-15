@@ -10,5 +10,5 @@ The browser fetches NASA POWER temperature and precipitation climatology with a 
 
 GPM IMERG, SMAP, MODIS NDVI, and GRACE are named as future data sources, not presented as live observations.
 
-- Live link: add the deployed GitHub Pages URL before submission.
+- Live link: https://blazecrops.vercel.app/ (GitHub Pages remains the labelled backup mirror).
 - Repository: `spartanfromk-18/Blaze-NSA`
