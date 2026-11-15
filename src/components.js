@@ -2,7 +2,7 @@ import { t } from './i18n.js';
 import { climateChart } from './chart.js';
 const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export function badge(source) { return `<span class="badge ${source === 'Sample' ? 'sample' : 'live'}">${esc(source)}</span>`; }
-export function scoreBar(label, value) { return `<div class="score"><span>${label}</span><strong>${value}/100 ${badge('Sample')}</strong><div><i style="width:${value}%"></i></div></div>`; }
+export function scoreBar(label, value) { return `<div class="score"><span>${label}</span><strong>${value}/100 ${badge('Sample')}</strong><div><i data-score-width="${value}"></i></div></div>`; }
 export function climateCard(climate, summary) {
   return `<section class="card climate" id="climate"><div class="section-kicker">${t.climate}</div><div class="climate-grid">
     <div><b>${summary.annualTemp.toFixed(1)}°C ${badge(climate.source)}</b><small>${t.annualTemp}</small></div><div><b>${summary.annualRain.toFixed(1)} mm/day ${badge(climate.source)}</b><small>वार्षिक वर्षा औसत</small></div>

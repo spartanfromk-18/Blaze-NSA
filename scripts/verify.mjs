@@ -1,6 +1,23 @@
 import { access, readFile } from 'node:fs/promises';
+import { join } from 'node:path';
 const required=['index.html','styles.css','src/main.js','src/nasa.js','src/climate.js','src/rotations.js','src/engine.js','src/voice.js','src/i18n.js','src/components.js','src/chart.js','src/dataPanel.js','src/hero.js','data/fallback-cache.json','test/engine.test.mjs','test/nasa.test.mjs','test/chart.test.mjs'];
 for(const file of required) await access(file);
+const ci = await readFile('.github/workflows/ci.yml', 'utf8');
+const pages = await readFile('.github/workflows/pages.yml', 'utf8');
+for (const phrase of ['node --test', 'node scripts/verify.mjs', 'pull_request']) if (!ci.includes(phrase)) throw new Error(`missing CI gate: ${phrase}`);
+for (const phrase of ['needs: test', 'path: _site', 'configure-pages@v5', 'enablement: true']) if (!pages.includes(phrase)) throw new Error(`missing Pages gate: ${phrase}`);
+const index = await readFile('index.html', 'utf8');
+for (const reference of [...index.matchAll(/(?:src|href)="([^"]+)"/g)].map(match => match[1]).filter(value => !/^(?:https?:|#)/.test(value))) {
+  await access(join('.', reference));
+}
+if (!index.includes('Content-Security-Policy') || !index.includes("script-src 'self'") || index.includes("script-src 'unsafe-inline'")) throw new Error('invalid CSP metadata');
+if (!index.includes('name="referrer"') || !index.includes('name="description"') || !index.includes('name="theme-color"')) throw new Error('missing metadata');
+for (const phrase of ['canonical', 'og:image', 'twitter:image', 'favicon.svg', 'favicon-32.png']) if (!index.includes(phrase)) throw new Error(`missing sharing metadata: ${phrase}`);
+if (/(?:href|src|fetch)\s*\(\s*["']\//.test(index)) throw new Error('root-absolute URL in index');
+for (const file of ['404.html', 'favicon.svg', 'favicon-32.png', 'og.png', 'DATA-CARD.md', 'MODEL-CARD.md', 'THREAT-MODEL.md', 'SECURITY.md', 'PRIVACY.md', 'ACCESSIBILITY.md']) await access(file);
+const fallback = JSON.parse(await readFile('data/fallback-cache.json', 'utf8'));
+if (!fallback.captured_at || fallback.source !== 'NASA POWER' || !fallback.parameters?.T2M || !fallback.parameters?.PRECTOTCORR) throw new Error('fallback metadata is incomplete');
+if (index.includes('style=') || /(?:document\.write|eval\(|new Function)/.test(await readFile('src/main.js', 'utf8'))) throw new Error('unsafe inline or executable sink found');
 const cache = JSON.parse(await readFile('data/fallback-cache.json','utf8'));
 if (!cache.properties?.parameter?.T2M || !cache.properties?.parameter?.PRECTOTCORR) throw new Error('fallback must be a captured NASA POWER response');
 const rotations = await readFile('src/rotations.js','utf8');
