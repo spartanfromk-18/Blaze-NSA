@@ -24,6 +24,7 @@ function render() {
   <section id="methods" class="card evidence"><h2>तरीका और सीमाएँ</h2><p>NASA POWER climatology के तापमान और वर्षा औसत से पानी, मिट्टी, जलवायु-फिट और प्राथमिकताओं का पारदर्शी स्कोर बनाया गया है।</p><details><summary>How these scores are computed</summary><p>Weights और crop water midpoints <a href="./src/rotations.js">rotations.js</a> में खुले हैं। Score खेत का आदेश नहीं है।</p></details><p><b>हमें यह नहीं पता:</b> आपकी मिट्टी की जाँच, सिंचाई, बीज और स्थानीय बाज़ार।</p><p class="disclaimer"><b>यह सलाह है, आदेश नहीं — अपने कृषि विशेषज्ञ से ज़रूर पूछें।</b></p></section>
   <footer>सलाह, आदेश नहीं। NASA POWER attribution · MIT licence · डेटा विफल होने पर Sample fallback उपलब्ध है।</footer></main>`;
   wireDownload(state.climate);
+  document.querySelectorAll('[data-score-width]').forEach(bar => { bar.style.width = `${bar.dataset.scoreWidth}%`; });
   document.querySelector('#location')?.addEventListener('change', e => { state.location = LOCATIONS[e.target.value]; state.climate = null; load(); });
   document.querySelectorAll('[data-priority]').forEach(button => button.addEventListener('click', () => { state.previousRanks = ranks(state.rotations); state.priorities[button.dataset.priority] = !state.priorities[button.dataset.priority]; state.rotations = scoreRotations(state.climate, state.priorities); render(); }));
   document.querySelectorAll('.detail').forEach(button => button.addEventListener('click', () => showDetail(state.rotations.find(r => r.id === button.dataset.rotation))));

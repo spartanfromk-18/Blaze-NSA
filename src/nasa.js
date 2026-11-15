@@ -1,4 +1,5 @@
 const BASE = 'https://power.larc.nasa.gov/api/temporal/climatology/point';
+const MONTHS = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
 export const LOCATIONS = {
   agra: { id: 'agra', name: 'आगरा', englishName: 'Agra', latitude: 27.1767, longitude: 78.0081 },
   lucknow: { id: 'lucknow', name: 'लखनऊ', englishName: 'Lucknow', latitude: 26.8467, longitude: 80.9462 },
@@ -14,6 +15,13 @@ export function buildUrl(location) {
 export function parseClimatology(payload, location) {
   const props = payload?.properties?.parameter || payload?.parameter;
   if (!props?.T2M || !props?.PRECTOTCORR) throw new Error('NASA response missing climate parameters');
+  for (const [name, values] of Object.entries({ T2M: props.T2M, PRECTOTCORR: props.PRECTOTCORR })) {
+    for (const key of [...MONTHS, 'ANN']) {
+      const value = Number(values[key]);
+      const valid = Number.isFinite(value) && value !== -999 && (name === 'T2M' ? value >= -60 && value <= 60 : value >= 0 && value <= 100);
+      if (!valid) throw new Error(`NASA response has invalid ${name}.${key}`);
+    }
+  }
   return { source: 'Live · NASA POWER', location, fetchedAt: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }), parameters: { T2M: props.T2M, PRECTOTCORR: props.PRECTOTCORR } };
 }
 

@@ -7,15 +7,26 @@ on:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
   group: pages
   cancel-in-progress: true
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: node --test
+      - run: node scripts/verify.mjs
   deploy:
+    needs: test
+    permissions:
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -23,20 +34,26 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: Run tests
-        run: node --test
-
       - uses: actions/configure-pages@v5
         with:
           enablement: true
 
+      - name: Build allow-listed site
+        run: |
+          mkdir -p _site
+          cp index.html styles.css _site/
+          cp -R src data _site/
+          for file in 404.html favicon.svg favicon-32.png og.png; do
+            test ! -e "$file" || cp "$file" _site/
+          done
+          test -z "$(find _site -type f ! -path '_site/index.html' ! -path '_site/styles.css' ! -path '_site/src/*' ! -path '_site/data/*' ! -name '404.html' ! -name 'favicon.svg' ! -name 'favicon-32.png' ! -name 'og.png' -print)"
+          for reference in $(grep -oE '(src|href)="[^"]+"' index.html | cut -d'"' -f2 | grep -vE '^(https?:|#)'); do
+            test -e "_site/$reference" || { echo "Missing referenced asset: $reference"; exit 1; }
+          done
+
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: _site
 
       - id: deployment
         uses: actions/deploy-pages@v4
